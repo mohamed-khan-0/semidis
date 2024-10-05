@@ -10,3 +10,8 @@
         <h1>{{ user.username }}</h1>
     </li>
 </ul>
+
+<form action="{% url 'home' %}" method="get"> 
+    <input type="text" name="q" placeholder="Search">
+    <input type="submit" value="Search">
+</form>
