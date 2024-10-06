@@ -36,3 +36,11 @@ class Message(models.Model):
 
     def __str__(self):
         return self.body
+    
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    avatar = models.ImageField()
+
+    def __str__(self):
+        return self.user.email
