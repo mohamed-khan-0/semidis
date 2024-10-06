@@ -1,0 +1,24 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+
+<div>
+    <h1>Login/Register</h1>
+    <hr>
+
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {% if page == 'login' %}
+        <input class="btn btn-primary" type="submit" value="Login">
+        {% else %}
+        <input class="btn btn-primary" type="submit" value="Register">
+        {% endif %}
+    </form>
+
+</div>
+
+
+
+{% endblock %}

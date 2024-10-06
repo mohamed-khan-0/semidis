@@ -3,6 +3,7 @@
         "ASGI",
         "dotenv",
         "herf",
-        "semidis"
+        "semidis",
+        "userprofile"
     ]
 }
