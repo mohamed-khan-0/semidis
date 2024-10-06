@@ -37,10 +37,10 @@
        {% for room in rooms %}
             <div>
                 <h4>@{{room.host}}</h4>
-                <a href="{% url 'room' room_number=room.id %}">{{room.id}}. {{ room.name }}</a>
+                <a href="{% url 'room' room_id=room.id %}">{{ room.name }}</a>
                 <p>{{room.topic}}</p>
-                <a href="{% url 'update_room' room_number=room.id %}">Update Room</a>
-                <a href="{% url 'delete_room' room_number=room.id %}">Delete Room</a>
+                <a href="{% url 'update_room' room_id=room.id %}">Update Room</a>
+                <a href="{% url 'delete_room' room_id=room.id %}">Delete Room</a>
 
                 <h5>Created at: {{room.created_at}}</h5>
                 <h5>Last Updated at: {{room.updated_at}}</h5>
