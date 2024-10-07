@@ -2,12 +2,35 @@
 
 {% block content %}
 
-<h1>{{ room.name }} </h1>
-<h3>{{ room.topic }}</h3>
-<h5>@{{ room.host }}</h5>
+<h1>Room name : {{ room.name }} </h1>
+<h3>About : <a class="btn btn-light btn-lg" href="{% url 'home' %}?t={{room.topic|urlencode}}">{{room.topic}}</a></h3>
+<h5>Created by : @{{ room.host }}</h5>
 <hr>
-<div class="container">
-    {{ room.description }}
+<div class="h5">
+    <p>{{ room.description }}</p>
+</div>
+
+<div>
+    <h3>Messages</h3>
+    <hr>
+    <div class="container">
+        <div class="list-group">
+        {% for message in messages %}
+            <div class="list-group-item list-group-item-action d-flex gap-3 py-3">
+                <p>@{{message.user}}: {{message.body}} </p>
+                <p>{{message.created_at|timesince}} ago</p>
+            </div>
+        {% endfor %}
+        </div>
+        {% if request.user.is_authenticated %}
+        <hr>
+        <form action="" method="post">
+            {% csrf_token %}
+            <input class="form-control" type="text" name="body" placeholder="Write a message .....">
+            <button class="btn btn-primary" style="margin-top: 10px;" type="submit">Send</button>
+        </form>
+        {% endif %}
+    </div>
 </div>
 
 

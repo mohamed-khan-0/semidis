@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.db.models import Q
-from .models import Room, Topic
+from .models import Room, Topic, Message
 from django.http import HttpResponse
 from .forms import RoomForm
 from django.contrib.auth.models import User
@@ -9,12 +9,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 
 
-# Create your views here.
-# rooms = [
-#         {'id': 1, 'name': 'Room 1 : Learn Django'},
-#         {'id': 2, 'name': 'Room 2 : Practice Django'},
-#         {'id': 3, 'name': 'Room 3 : Make Money'},
-#     ]
+
 def home(request):
     """
     Handles the home page and search feature.
@@ -57,7 +52,16 @@ def home(request):
 
 def room(request, room_id):
     room = Room.objects.get(id=room_id)
-    context = {'room': room}
+    messages = room.message_set.all().order_by('-created_at')
+    if request.method == 'POST':
+        message = Message.objects.create(
+            user=request.user,
+            room=room,
+            body=request.POST.get('body')
+        )
+        return redirect('room', room_id=room.id)
+
+    context = {'room': room , 'messages': messages}
     return render(request, 'base/room.html', context)
 
 @login_required(login_url='login')
