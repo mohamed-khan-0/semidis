@@ -2,6 +2,14 @@
 
 {% block content %}
 
+<style>
+    .room-content{
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+        grid-gap: 20px;
+    }
+</style>
+
 <h1>Room name : {{ room.name }} </h1>
 <h3>About : <a class="btn btn-light btn-lg" href="{% url 'home' %}?t={{room.topic|urlencode}}">{{room.topic}}</a></h3>
 <h5>Created by : @{{ room.host }}</h5>
@@ -9,31 +17,48 @@
 <div class="h5">
     <p>{{ room.description }}</p>
 </div>
-
-<div>
-    <h3>Messages</h3>
-    <hr>
-    <div class="container">
-        <div class="list-group">
-        {% for message in messages %}
-            <div class="list-group-item list-group-item-action d-flex gap-3 py-3">
-                <p>@{{message.user}}: {{message.body}} </p>
-                <p>{{message.created_at|timesince}} ago</p>
-            </div>
-        {% endfor %}
-        </div>
-        {% if request.user.is_authenticated %}
+<div class="room-content">
+    <div>
+        <h3>Messages</h3>
         <hr>
-        <form action="" method="post">
-            {% csrf_token %}
-            <input class="form-control" type="text" name="body" placeholder="Write a message .....">
-            <button class="btn btn-primary" style="margin-top: 10px;" type="submit">Send</button>
-        </form>
-        {% endif %}
+        <div class="container">
+            <div class="list-group">
+            {% for message in messages %}
+                <div class="list-group-item list-group-item-action d-flex gap-3 py-3">
+                    <p>@{{message.user}}: {{message.body}} </p>
+                
+                    <p>{{message.created_at|timesince}} ago</p>
+                    {% if request.user == message.user %}
+                    <a class="btn btn-danger" href="{% url 'delete_message' message_id=message.id %}">Delete</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            </div>
+            {% if request.user.is_authenticated %}
+            <hr>
+            <form action="" method="post">
+                {% csrf_token %}
+                <input class="form-control" type="text" name="body" placeholder="Write a message .....">
+                <button class="btn btn-primary" style="margin-top: 10px;" type="submit">Send</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <div>
+        <h3>Participants</h3>
+        <hr>
+        <div class="container">
+            <div class="list-group">
+            {% for user in participants %}
+                <div class="list-group-item list-group-item-action d-flex gap-3 py-3">
+                    <p>@{{user.username}}</p>
+                </div>
+            {% endfor %}
+            </div>
+        </div>
     </div>
 </div>
-
-
 {% endblock %}
 
 
