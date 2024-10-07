@@ -18,12 +18,12 @@
 
         <h3>Topics</h3>
         <hr>
-        <div>
-            <a href="{% url 'home' %}">All</a>
+        <div style='padding: 10px;'>
+            <a class="btn btn-light btn-lg" href="{% url 'home' %}">All</a>
         </div>
         {% for topic in topics %}
-            <div>
-                <a href="{% url 'home' %}?t={{topic.name|urlencode}}">{{topic.name}}</a>
+            <div style='padding: 10px;'>
+                <a class="btn btn-light btn-lg" href="{% url 'home' %}?t={{topic.name|urlencode}}">{{topic.name}}</a>
             </div>
         {% endfor %}
 
@@ -32,22 +32,30 @@
     
     <div>
         <h3>Rooms available : {{ rooms.count }}</h3>
-        <a href="{% url 'create_room' %}">Create Room</a>
+        <a class="btn btn-success" href="{% url 'create_room' %}">Create Room</a>
         <hr>
+    <div class="list-group">
        {% for room in rooms %}
-            <div>
-                <h4>@{{room.host}}</h4>
-                <a href="{% url 'room' room_id=room.id %}">{{ room.name }}</a>
-                <p>{{room.topic}}</p>
-                <a href="{% url 'update_room' room_id=room.id %}">Update Room</a>
-                <a href="{% url 'delete_room' room_id=room.id %}">Delete Room</a>
+            <div class="list-group-item list-group-item-action d-flex gap-3 py-3">
+                <h6>@{{room.host}}</h6>
+                <a class="h5"  href="{% url 'room' room_id=room.id %}">{{ room.name }}</a>
+                <p class="lead">{{room.topic}}</p>
+                {% if request.user == room.host %}
+                <a class="btn btn-warning" href="{% url 'update_room' room_id=room.id %}">Update Room</a>
+                <a class="btn btn-danger" href="{% url 'delete_room' room_id=room.id %}">Delete Room</a>
+                {% else %}
+                <a></a>
+                <a></a>
+                {% endif %}
 
-                <h5>Created at: {{room.created_at}}</h5>
-                <h5>Last Updated at: {{room.updated_at}}</h5>
+                <h6>Created from: {{room.created_at|timesince}}</h6>
+                <h6>Last Updated from: {{room.updated_at|timesince}}</h6>
 
                 <hr>
             </div>
        {% endfor %} 
+    </div>
+    <hr>
     </div>
 </div>
 
