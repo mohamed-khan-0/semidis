@@ -26,8 +26,27 @@
             {% for message in messages %}
                 <div class="list-group-item list-group-item-action d-flex gap-3 py-3">
                     <p>@{{message.user}}: {{message.body}} </p>
-                
-                    <p>{{message.created_at|timesince}} ago</p>
+                    {% with extensions=".jpg,.png,.jpeg" %}
+                    {% if message.media.url|slice:"-4:" in extensions %}
+                    <img src="{{message.media.url}}" alt="message" width="50px" height="50px">
+                    {% endif %}
+                    {% endwith %}
+                    {% with extensions=".mp4,.mkv,.webm,.ogg" %}
+                    {% if message.media.url|slice:"-4:" in extensions %}
+                    <video width="320" height="240" controls>
+                        <source src="{{message.media.url}}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    {% endif %}
+                    {% endwith %}
+                    {% with extensions=".mp3,.wav" %}
+                    {% if message.media.url|slice:"-4:" in extensions %}
+                    <audio controls>
+                        <source src="{{message.media.url}}" type="audio/mpeg">
+                        Your browser does not support the video tag.
+                    </audio>
+                    {% endif %}
+                    {% endwith %}
                     {% if request.user == message.user %}
                     <a class="btn btn-danger" href="{% url 'delete_message' message_id=message.id %}">Delete</a>
                     {% endif %}
@@ -36,10 +55,12 @@
             </div>
             {% if request.user.is_authenticated %}
             <hr>
-            <form action="" method="post">
+            <form action="" method="post" enctype="multipart/form-data" novalidate>
                 {% csrf_token %}
-                <input class="form-control" type="text" name="body" placeholder="Write a message .....">
-                <button class="btn btn-primary" style="margin-top: 10px;" type="submit">Send</button>
+                <div class="form">
+                    {{ mform.as_p }}
+                </div>
+                <button class="btn btn-primary" style="margin-top: 10px; margin-bottom: 10px;" type="submit">Send</button>
             </form>
             {% endif %}
         </div>

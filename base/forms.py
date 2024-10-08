@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Room, Topic
+from .models import Room, Topic, Message
 
 
 class RoomForm(ModelForm):
@@ -11,3 +11,10 @@ class RoomForm(ModelForm):
         model = Room
         fields = ['topic', 'name', 'description']
 
+class MassageForm(ModelForm):
+    body = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}))
+    media = forms.FileField(widget=forms.FileInput(attrs={'class': 'form-control'}), required=False)
+
+    class Meta:
+        model = Message
+        fields = ['body', 'media']

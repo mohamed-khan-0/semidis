@@ -10,13 +10,7 @@
     <div class="form">
         <form action="" method="post" class="needs-validation" novalidate>
             {% csrf_token %}
-            
-            <!-- Rendering Django form fields with Bootstrap -->
-            <div class="mb-3">
-                {{ form.as_p }}
-            </div>
-
-            <!-- Submit button with Bootstrap classes -->
+            {{ form.as_p }}
             <input type="submit" value="Submit" class="btn btn-primary">
         </form>
     </div>

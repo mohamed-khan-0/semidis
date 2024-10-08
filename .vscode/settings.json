@@ -3,6 +3,7 @@
         "ASGI",
         "dotenv",
         "herf",
+        "mform",
         "semidis",
         "userprofile"
     ]
