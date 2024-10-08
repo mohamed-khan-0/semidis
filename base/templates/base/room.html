@@ -26,29 +26,33 @@
             {% for message in messages %}
                 <div class="list-group-item list-group-item-action d-flex gap-3 py-3">
                     <p>@{{message.user}}: {{message.body}} </p>
-                    {% with extensions=".jpg,.png,.jpeg" %}
-                    {% if message.media.url|slice:"-4:" in extensions %}
-                    <img src="{{message.media.url}}" alt="message" width="50px" height="50px">
-                    {% endif %}
-                    {% endwith %}
-                    {% with extensions=".mp4,.mkv,.webm,.ogg" %}
-                    {% if message.media.url|slice:"-4:" in extensions %}
-                    <video width="320" height="240" controls>
-                        <source src="{{message.media.url}}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                    {% endif %}
-                    {% endwith %}
-                    {% with extensions=".mp3,.wav" %}
-                    {% if message.media.url|slice:"-4:" in extensions %}
-                    <audio controls>
-                        <source src="{{message.media.url}}" type="audio/mpeg">
-                        Your browser does not support the video tag.
-                    </audio>
-                    {% endif %}
-                    {% endwith %}
+                        {% with extensions=".jpg,.png,.jpeg" %}
+                        {% if message.media.url|slice:"-4:" in extensions %}
+                        <img src="{{message.media.url}}" alt="message" width="50px" height="50px">
+                        {% endif %}
+                        {% endwith %}
+                        {% with extensions=".mp4,.mkv,.webm,.ogg" %}
+                        {% if message.media.url|slice:"-4:" in extensions %}
+                        <video width="320" height="240" controls>
+                            <source src="{{message.media.url}}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        {% endif %}
+                        {% endwith %}
+                        {% with extensions=".mp3,.wav" %}
+                        {% if message.media.url|slice:"-4:" in extensions %}
+                        <audio controls>
+                            <source src="{{message.media.url}}" type="audio/mpeg">
+                            Your browser does not support the video tag.
+                        </audio>
+                        {% endif %}
+                        {% endwith %}
+
                     {% if request.user == message.user %}
                     <a class="btn btn-danger" href="{% url 'delete_message' message_id=message.id %}">Delete</a>
+                    {% endif %}
+                    {% if message.media.url %}
+                    <a class="btn btn-primary" href="{{message.media.url}}">Download</a>
                     {% endif %}
                 </div>
             {% endfor %}
