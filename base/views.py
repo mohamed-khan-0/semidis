@@ -1,3 +1,6 @@
+import os
+from django.dispatch import receiver
+from django.db.models.signals import post_delete
 from django.shortcuts import render, redirect
 from django.db.models import Q
 from .models import Room, Topic, Message
@@ -131,6 +134,12 @@ def delete_message(request, message_id):
         return redirect('home')
     message.delete()
     return redirect('room', room_id=message.room.id)
+
+@receiver(post_delete, sender=Message)
+def delete_media_message(sender, instance, **kwargs):
+    if instance.media:
+        if os.path.isfile(instance.media.path):
+            os.remove(instance.media.path)
 
 def loginPage(request):
     page = 'login'
