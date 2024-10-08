@@ -3,21 +3,24 @@
 {% block content %}
 
 
+<body class="text-center"></body>
 <div>
     <h1>Login/Register</h1>
     <hr>
-
-    <form action="" method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        {% if page == 'login' %}
-        <input class="btn btn-primary" type="submit" value="Login">
-        {% else %}
-        <input class="btn btn-primary" type="submit" value="Register">
-        {% endif %}
-    </form>
+    <div class="container mt-6">
+        <form action="" method="POST" class="form-signin">
+            {% csrf_token %}
+            {{ form }}
+            {% if page == 'login' %}
+            <input class="btn btn-primary" style="margin-top: 10px;" type="submit" value="Login">
+            {% else %}
+            <input class="btn btn-primary" style="margin-top: 10px;" type="submit" value="Register">
+            {% endif %}
+        </form>
+    </div>
 
 </div>
+</body>
 
 
 
