@@ -15,6 +15,12 @@ class MassageForm(ModelForm):
     body = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}))
     media = forms.FileField(widget=forms.FileInput(attrs={'class': 'form-control'}), required=False)
 
+    def clean_media(self):
+        media = self.cleaned_data.get('media')
+        if media and not media.content_type.startswith('audio'):
+            raise forms.ValidationError('Only audio files are allowed.')
+        return media
+
     class Meta:
         model = Message
         fields = ['body', 'media']

@@ -31,7 +31,7 @@
                         <img src="{{message.media.url}}" alt="message" width="50px" height="50px">
                         {% endif %}
                         {% endwith %}
-                        {% with extensions=".mp4,.mkv,.webm,.ogg" %}
+                        {% with extensions=".mp4,.mkv,.webm" %}
                         {% if message.media.url|slice:"-4:" in extensions %}
                         <video width="320" height="240" controls>
                             <source src="{{message.media.url}}" type="video/mp4">
@@ -39,7 +39,7 @@
                         </video>
                         {% endif %}
                         {% endwith %}
-                        {% with extensions=".mp3,.wav" %}
+                        {% with extensions=".mp3,.wav,.ogg" %}
                         {% if message.media.url|slice:"-4:" in extensions %}
                         <audio controls>
                             <source src="{{message.media.url}}" type="audio/mpeg">
@@ -63,6 +63,12 @@
                 {% csrf_token %}
                 <div class="form">
                     {{ mform.as_p }}
+                    <input type="file" id="id_media" name="media" accept="audio/*" style="display: none;">
+                    <div>
+                        <button type="button" id="record-btn" class="btn btn-secondary">Record Voice</button>
+                        <button type="button" id="stop-btn" class="btn btn-danger" style="display: none;">Stop Recording</button>
+                        <audio id="audio-preview" controls style="display:none;"></audio>
+                    </div>
                 </div>
                 <button class="btn btn-primary" style="margin-top: 10px; margin-bottom: 10px;" type="submit">Send</button>
             </form>
@@ -84,6 +90,52 @@
         </div>
     </div>
 </div>
+
+<script>
+    let recordBtn = document.getElementById('record-btn');
+    let stopBtn = document.getElementById('stop-btn');
+    let audioPreview = document.getElementById('audio-preview');
+    let mediaInput = document.getElementById('id_media');
+
+    let chunks = [];
+    let mediaRecorder;
+    let audioBlob;
+
+    recordBtn.addEventListener('click', async () => {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.start();
+
+        recordBtn.style.display = 'none';
+        stopBtn.style.display = 'inline-block';
+
+        mediaRecorder.ondataavailable = function(e) {
+            chunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = function() {
+            audioBlob = new Blob(chunks, { 'type': 'audio/ogg; codecs=opus' });
+            chunks = [];
+
+            const audioURL = URL.createObjectURL(audioBlob);
+            audioPreview.src = audioURL;
+            audioPreview.style.display = 'block';
+
+            // Create a File object from the Blob and set it as the input file for form submission
+            const file = new File([audioBlob], 'recording.ogg', { type: 'audio/ogg' });
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            mediaInput.files = dataTransfer.files; // Update the hidden file input with the recorded audio
+        };
+    });
+
+    stopBtn.addEventListener('click', () => {
+        mediaRecorder.stop();
+        recordBtn.style.display = 'inline-block';
+        stopBtn.style.display = 'none';
+    });
+</script>
+
 {% endblock %}
 
 
