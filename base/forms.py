@@ -12,7 +12,7 @@ class RoomForm(ModelForm):
         fields = ['topic', 'name', 'description']
 
 class MassageForm(ModelForm):
-    body = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}))
+    body = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
     media = forms.FileField(widget=forms.FileInput(attrs={'class': 'form-control'}), required=False)
 
     def clean_media(self):

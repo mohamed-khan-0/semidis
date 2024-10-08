@@ -51,7 +51,7 @@
                     {% if request.user == message.user %}
                     <a class="btn btn-danger" href="{% url 'delete_message' message_id=message.id %}">Delete</a>
                     {% endif %}
-                    {% if message.media.url %}
+                    {% if message.media %}
                     <a class="btn btn-primary" href="{{message.media.url}}">Download</a>
                     {% endif %}
                 </div>
@@ -126,6 +126,7 @@
             const dataTransfer = new DataTransfer();
             dataTransfer.items.add(file);
             mediaInput.files = dataTransfer.files; // Update the hidden file input with the recorded audio
+            mediaInput.style.display = 'none';
         };
     });
 
