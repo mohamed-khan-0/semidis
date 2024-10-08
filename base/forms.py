@@ -1,7 +1,13 @@
 from django import forms
 from django.forms import ModelForm
 from .models import Room, Topic, Message
+from django.core.exceptions import ValidationError
 
+
+def validate_file_size(value):
+    limit = 10 * 1024 * 1024  # 10 MB in bytes
+    if value.size > limit:
+        raise ValidationError('File size cannot exceed 10 MB.')
 
 class RoomForm(ModelForm):
     topic = forms.ModelChoiceField(queryset=Topic.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
@@ -13,7 +19,7 @@ class RoomForm(ModelForm):
 
 class MassageForm(ModelForm):
     body = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
-    media = forms.FileField(widget=forms.FileInput(attrs={'class': 'form-control'}), required=False)
+    media = forms.FileField(widget=forms.FileInput(attrs={'class': 'form-control'}), required=False, validators=[validate_file_size])
 
     def clean_media(self):
         media = self.cleaned_data.get('media')
