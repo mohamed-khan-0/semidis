@@ -34,28 +34,50 @@
         <h3>Rooms available : {{ rooms.count }}</h3>
         <a class="btn btn-success" href="{% url 'create_room' %}">Create Room</a>
         <hr>
-    <div class="list-group">
-       {% for room in rooms %}
-            <div class="list-group-item list-group-item-action d-flex gap-3 py-3">
-                <h6>@{{room.host}}</h6>
-                <a class="h5"  href="{% url 'room' room_id=room.id %}">{{ room.name }}</a>
-                <p class="lead">{{room.topic}}</p>
-                {% if request.user == room.host %}
-                <a class="btn btn-warning" href="{% url 'update_room' room_id=room.id %}">Update Room</a>
-                <a class="btn btn-danger" href="{% url 'delete_room' room_id=room.id %}">Delete Room</a>
-                {% else %}
-                <a></a>
-                <a></a>
-                {% endif %}
-
-                <small>Created from:<br> {{room.created_at|timesince}}</small>
-                <small>Last Updated from:<br> {{room.updated_at|timesince}}</small>
-
-                <hr>
+        <div>
+            <div class="row row-cols-md-6 mb-1 text-center">
+                <div class="col themed-grid-col"><h5>Host</h5></div>
+                <div class="col themed-grid-col"><h5>Name</h5></div>
+                <div class="col themed-grid-col"><h5>Topic</h5></div>
+                <div class="col themed-grid-col"><h5></h5></div>
+                <div class="col themed-grid-col"><h5>Created From</h5></div>
+                <div class="col themed-grid-col"><h5>Last Updated</h5></div>
             </div>
-       {% endfor %} 
-    </div>
-    <hr>
+            <hr>
+            {% for room in rooms %}
+                <div class="row row-cols-md-6 mb-1 text-center">
+                    <div class="col themed-grid-col">
+                        <h6>@{{room.host}}</h6>
+                    </div>
+                    <div class="col themed-grid-col">
+                        <a class="h5"  href="{% url 'room' room_id=room.id %}">{{ room.name }}</a>
+                    </div>
+                    <div class="col themed-grid-col">
+                        <p class="lead">{{room.topic}}</p>
+                    </div>
+                    <div class="col themed-grid-col">
+                        {% if request.user == room.host %}
+                            <div class="row">
+                            <a class="btn btn-warning" href="{% url 'update_room' room_id=room.id %}">Update Room</a>
+                            </div>
+                            <div class="row">
+                            <a class="btn btn-danger" href="{% url 'delete_room' room_id=room.id %}">Delete Room</a>
+                            </div>
+                        {% else %}
+                            <a></a>
+                            <a></a>
+                        {% endif %}
+                    </div>
+                    <div class="col themed-grid-col">
+                        <small>{{room.created_at|timesince}}</small>
+                    </div>
+                    <div class="col themed-grid-col">
+                        <small>{{room.updated_at|timesince}}</small>
+                    </div>
+                </div>
+                <hr>
+            {% endfor %} 
+        </div>
     </div>
 </div>
 
